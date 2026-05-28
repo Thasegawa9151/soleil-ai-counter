@@ -47,3 +47,7 @@ Currently developed as a mu-plugin and evolving through real-world testing.
 Taizou Hasegawa  
 株式会社Soleil  
 https://soleil-design.com/
+
+## Discoveries
+
+- Modal CTA can block AI fetches
