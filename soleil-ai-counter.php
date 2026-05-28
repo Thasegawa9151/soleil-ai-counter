@@ -1,8 +1,8 @@
 <?php
 /**
  * Plugin Name: Soleil AI Counter mark01
- * Description: AIエージェントの訪問回数を記事末尾に表示する最小版。
- * Version: 0.1.0
+ * Description: AIエージェントの訪問回数を記事末尾に表示する最小版。一般公開タイプ
+ * Version: 0.1.5β
  * Author: Soleil
  */
 
@@ -19,18 +19,18 @@ function soleil_ai_counter_detect_bot(): string {
     if ($ua === '') {
         return '';
     }
-
-    $bots = [
-        'SoleilTestBot'  => 'Soleil Test',
-        'GPTBot'         => 'OpenAI',
-        'ChatGPT-User'  => 'OpenAI',
-        'ClaudeBot'     => 'Anthropic',
-        'PerplexityBot' => 'Perplexity',
-        'Google-Extended' => 'Google',
-        'Applebot'      => 'Apple',
-        'Bytespider'    => 'ByteDance',
-        'CCBot'         => 'Common Crawl',
-    ];
+$bots = [
+    'SoleilTestBot'  => 'Soleil Test',
+    'GPTBot'         => 'OpenAI',
+    'ChatGPT-User'   => 'OpenAI',
+    'ClaudeBot'      => 'Anthropic',
+    'Claude-User'    => 'Anthropic',
+    'PerplexityBot'  => 'Perplexity',
+    'Google-Extended'=> 'Google',
+    'Applebot'       => 'Apple',
+    'Bytespider'     => 'ByteDance',
+    'CCBot'          => 'Common Crawl',
+];
 
     foreach ($bots as $needle => $name) {
         if (stripos($ua, $needle) !== false) {
@@ -79,15 +79,24 @@ add_action('wp', 'soleil_ai_counter_count_visit');
  * 記事末尾にカウンターを表示
  */
 function soleil_ai_counter_append_to_content(string $content): string {
+
     if (!is_singular('post') || !in_the_loop() || !is_main_query()) {
         return $content;
     }
 
     $post_id = get_the_ID();
-    $count = (int) get_post_meta($post_id, '_soleil_ai_counter_total', true);
+
+    $count = (int) get_post_meta(
+        $post_id,
+        '_soleil_ai_counter_total',
+        true
+    );
 
     $html = sprintf(
-        '<div class="soleil-ai-counter" style="margin-top:2em;padding:1em;border:1px solid #ddd;border-radius:8px;font-size:0.95em;line-height:1.7;">🤖この記事はAIエージェントが %s 回見ました</div>',
+        '<div class="soleil-ai-counter" style="margin-top:2em;padding:1em;border:1px solid #ddd;border-radius:8px;font-size:0.95em;line-height:1.7;">
+        🤖この記事はAIエージェントが %s 回見ました<br>
+        <small>※Soleil AI Counter mark1.5β による実験的表示です</small>
+        </div>',
         esc_html(number_format_i18n($count))
     );
 
